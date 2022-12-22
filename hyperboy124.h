@@ -75,6 +75,7 @@ enum custom_keycodes {
     VC_GF,
     VC_NEXT,
     VC_PREV,
+    VC_COMM,
     VC_INCR,
     VC_DECR,
     DISCODE,
@@ -157,6 +158,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case VC_DECR:
             if (record->event.pressed) {
                 SEND_STRING("\e n-\e");
+            }
+            return true;
+        case VC_COMM:
+            if (record->event.pressed) {
+                SEND_STRING("\e cl\e");
             }
             return true;
         case CLANGED:
