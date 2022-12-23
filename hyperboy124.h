@@ -101,13 +101,14 @@ void CheckArrayStack(void) {
 
 void CheckArrayStackI(void) {
     uint8_t CodeConfirmCounter = 0;
+    bool ConfirmedCode2 = false;
     for (uint8_t vimnumber = 0; vimnumber < 6; vimnumber++) {
         if (VimAutoArray[vimnumber] == VimIArray[vimnumber]) {
-            ConfirmedCode = ++CodeConfirmCounter == 2;
+            ConfirmedCode2 = ++CodeConfirmCounter == 2;
         }
-        if (ConfirmedCode) {
+        if (ConfirmedCode2) {
             SEND_STRING(SS_TAP(X_BSPC) "I");
-            ConfirmedCode = false;
+            ConfirmedCode2 = false;
         }
     }
 }
@@ -216,6 +217,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("\egf");
             }
             return true;
+        case KC_QUOT:
+            if (record->event.pressed) {
+                CheckArrayStackI();
+            }
+            return true;
         case KC_SPC:
             if (record->event.pressed) {
                 ShuffleArrayStack(keycode);
@@ -227,7 +233,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING("i");
                 TermVIState = true;
             } else {
-
                 layer_off(_TERMVI);
                 return false;
             }
