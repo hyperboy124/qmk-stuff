@@ -225,9 +225,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case VIMINSE:
             if (record->event.pressed) {
                 SEND_STRING("i");
-            } else {
-                layer_off(_TERMVI);
                 TermVIState = true;
+            } else {
+
+                layer_off(_TERMVI);
+                return false;
             }
             break;
         case VIMSPLV:
