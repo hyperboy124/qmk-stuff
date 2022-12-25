@@ -15,7 +15,7 @@ void i3_finished(qk_tap_dance_state_t *state, void *user_data) {
     ql_tap_state.state = cur_dance(state);
     switch (ql_tap_state.state) {
         case TD_SINGLE_TAP:
-            layer_invert(_SYMB);
+            layer_invert(_NAV);
             break;
         case TD_SINGLE_HOLD:
             layer_on(_I3WM);

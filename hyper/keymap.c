@@ -42,20 +42,26 @@ enum {
 };
 enum combo_events {
 termvicombo,
-mousecombo
+mousecombo,
+youcombo,
+numcombo
 };
 #include "hyperboy124.h"
 const uint16_t PROGMEM wcombo1[]               = {KC_R, KC_S, KC_T, KC_H, COMBO_END};
 const uint16_t PROGMEM numcombo9[]               = {KC_8, KC_1,COMBO_END};
 const uint16_t PROGMEM numcombo7[]               = {KC_4, KC_1, KC_2,COMBO_END};
+const uint16_t PROGMEM numcombo10[]               = {KC_4, KC_8, KC_2, KC_0,COMBO_END};
 const uint16_t PROGMEM numcombo5[]               = {KC_4, KC_1,COMBO_END};
 const uint16_t PROGMEM numcombo6[]               = {KC_4, KC_2,COMBO_END};
 const uint16_t PROGMEM numcombo3[]               = {KC_1, KC_2,COMBO_END};
 const uint16_t PROGMEM qcombo1[]               = {KC_N, KC_E, KC_A, KC_I, COMBO_END};
 const uint16_t PROGMEM ycombo1[]               = {KC_A, KC_E, COMBO_END};
+const uint16_t PROGMEM ycombo2[]               = {KC_A, KC_I, COMBO_END};
 combo_t                key_combos[COMBO_COUNT] = {
     [termvicombo] = COMBO_ACTION(wcombo1),
     [mousecombo] = COMBO_ACTION(qcombo1),
+    [numcombo] = COMBO_ACTION(numcombo10),
+    [youcombo] = COMBO_ACTION(ycombo2),
     COMBO(ycombo1, KC_ENT),
     COMBO(numcombo9, KC_9),
     COMBO(numcombo7, KC_7),
@@ -65,17 +71,28 @@ combo_t                key_combos[COMBO_COUNT] = {
 };
 
 // clang-format on
-void                   process_combo_event(uint16_t combo_index, bool pressed) {
-                      switch (combo_index) {
-                          case termvicombo:
+void process_combo_event(uint16_t combo_index, bool pressed) {
+    switch (combo_index) {
+        case termvicombo:
             if (pressed) {
-                                  layer_on(_TERMVI);
-                                  TermVIState = true;
+                SEND_STRING("\e");
+                layer_on(_TERMVI);
+                TermVIState = true;
             }
             break;
-                          case mousecombo:
+        case mousecombo:
             if (pressed) {
-                                  layer_on(_NAV);
+                layer_on(_SYMB);
+            }
+            break;
+        case numcombo:
+            if (pressed) {
+                layer_off(_SYMB);
+            }
+            break;
+        case youcombo:
+            if (pressed) {
+                SEND_STRING("you");
             }
             break;
     }

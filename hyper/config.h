@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define NO_ACTION_FUNCTION
 //#define NO_ACTION_ONESHOT
 #define AUTO_SHIFT_MODIFIERS
-#define COMBO_COUNT 8
+#define COMBO_COUNT 9
 #define AUTO_SHIFT_TIMEOUT 115
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
 #define PERMISSIVE_HOLD
