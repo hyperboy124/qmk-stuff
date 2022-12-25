@@ -75,8 +75,10 @@ enum custom_keycodes {
     VC_GF,
     VC_NEXT,
     VC_PREV,
+    VC_BUFF,
     VC_COMM,
     VC_INCR,
+    VC_FUCK,
     VC_DECR,
     DISCODE,
     FORMCOD,
@@ -143,7 +145,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
         case FORMCOD:
             if (record->event.pressed) {
-                SEND_STRING(" bf");
+                SEND_STRING("\e bf\e");
+            }
+            return true;
+        case VC_FUCK:
+            if (record->event.pressed) {
+                SEND_STRING("fuck you get off my pc");
             }
             return true;
         case CLANGER:
@@ -154,6 +161,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case VC_INCR:
             if (record->event.pressed) {
                 SEND_STRING("\e n+\e");
+            }
+            return true;
+        case VC_BUFF:
+            if (record->event.pressed) {
+                SEND_STRING("\e bn\e");
             }
             return true;
         case VC_DECR:

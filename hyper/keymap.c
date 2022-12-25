@@ -40,8 +40,46 @@ enum {
     TD_DOWN,
     TD_RGHT
 };
+enum combo_events {
+termvicombo,
+mousecombo
+};
 #include "hyperboy124.h"
+const uint16_t PROGMEM wcombo1[]               = {KC_R, KC_S, KC_T, KC_H, COMBO_END};
+const uint16_t PROGMEM numcombo9[]               = {KC_8, KC_1,COMBO_END};
+const uint16_t PROGMEM numcombo7[]               = {KC_4, KC_1, KC_2,COMBO_END};
+const uint16_t PROGMEM numcombo5[]               = {KC_4, KC_1,COMBO_END};
+const uint16_t PROGMEM numcombo6[]               = {KC_4, KC_2,COMBO_END};
+const uint16_t PROGMEM numcombo3[]               = {KC_1, KC_2,COMBO_END};
+const uint16_t PROGMEM qcombo1[]               = {KC_N, KC_E, KC_A, KC_I, COMBO_END};
+const uint16_t PROGMEM ycombo1[]               = {KC_A, KC_E, COMBO_END};
+combo_t                key_combos[COMBO_COUNT] = {
+    [termvicombo] = COMBO_ACTION(wcombo1),
+    [mousecombo] = COMBO_ACTION(qcombo1),
+    COMBO(ycombo1, KC_ENT),
+    COMBO(numcombo9, KC_9),
+    COMBO(numcombo7, KC_7),
+    COMBO(numcombo6, KC_6),
+    COMBO(numcombo5, KC_5),
+    COMBO(numcombo3, KC_3)
+};
+
 // clang-format on
+void                   process_combo_event(uint16_t combo_index, bool pressed) {
+                      switch (combo_index) {
+                          case termvicombo:
+            if (pressed) {
+                                  layer_on(_TERMVI);
+                                  TermVIState = true;
+            }
+            break;
+                          case mousecombo:
+            if (pressed) {
+                                  layer_on(_NAV);
+            }
+            break;
+    }
+}
 // clang-format off
 //begin fancy layout swapping nonsense
 #define LAYOUT_redox_wrapper(...) LAYOUT(__VA_ARGS__)
@@ -104,8 +142,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_TERMVI] = LAYOUT_redox_wrapper(
       _______, ________________NUMBER_LEFT_1______________,                                             ________________NUMBER_RIGHT_1_____________, _______,
-      _______, _______, C(KC_W),    KC_W, S(KC_4), VC_COMM, _______,                           _______, _______, _______, _______, _______, _______, _______,
-      _______, __________________VIM_3____________________, _______,                           _______, _________________VIM_NAV___________________, _______,
+      _______, _______, _______, _______, S(KC_4), VC_COMM, _______,                           _______, _______, _______, _______, _______, _______, _______,
+      _______, __________________VIM_3____________________, VC_BUFF,                              KC_B, _________________VIM_NAV___________________,    KC_W,
       _______, _______, _______, _______, _______, TD(TD_VIVI), _______, _______,     _______, _______, VIMSPLI, VIMSPLV, IEDITOG,S(KC_COMM),S(KC_DOT), KC_U,
       _______, _______, _______, _______,     _______,      _______, _______,         _______, _______,     _______,      _______, _______, _______, _______
     ),
@@ -114,14 +152,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
       _______, _______, _______, _______, _______, _______, _______,                           _______, _______, ________________MOUSE_WHEEL________________,
       _______, _______, _______, _______, _______, _______, _______,                           _______, _______, _________________MOUSE_MOVE________________,
       _______, _______, _______, _______, _______, _______, _______, _______,         KC_BTN2, _______, _______, _________________VIM_NAV___________________,
-      _______, _______, _______, _______,      _______,     _______, _______,         KC_BTN1, _______,     _______,      _______, _______, _______, _______
+      _______, _______, _______, _______,      _______,     _______, _______,         KC_BTN1, _______,       SYM_L,      _______, _______, _______, _______
     ),
     [_SYMB] = LAYOUT_redox_wrapper(
      OSM_CAG , ___________________BLANK___________________,                                             OSM_SG , _______, _______, _______, _______, _______,
      KC_VOLU , ___________________BLANK___________________, _______,                          _______ , KC_PSLS, KC_PAST, _______, _______, KC_PMNS, _______,
-     KC_VOLD , ________________NUMBER_LEFT_1______________, KC_GES ,                          C(KC_K) , ________________NUMBER_RIGHT_1_____________, _______,
+     KC_VOLD , _______, _______, _______, _______, _______,  KC_GES,                          C(KC_K) , _______,    KC_0,    KC_2,    KC_4,    KC_8, _______,
      OSM_AG  , _______, _______, _______,  KC_EQL, _______, _______, _______,         _______, _______, KC_PSCR, _______, _______, _______, _______, _______,
-     OSM_G   , _______, _______, _______,      _______,     _______, _______,         _______, KC_LSFT,     _______,      _______, _______, _______, _______
+     OSM_G   , _______, _______, _______,      _______,     _______, _______,         _______,   KC_1,     _______,      _______, _______, _______, _______
     ),
     [_ADJUST] = LAYOUT_redox_wrapper(
      _______, _______, _______, _______, _______, _______,                                              _______, _______, _______, _______, _______, _______,
@@ -154,7 +192,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_ONESHOTS] = LAYOUT_redox_wrapper(
       _______, _______, _______, _______, _______, _______,                                             _______, _______, _______, _______, _______, _______,
       _______, _______, _______, _______, _______, _______, _______,                           _______, CLANGER, VC_INCR, _______, _______, _______, _______,
-      _______,   OSM_S,   OSM_L,   OSM_A,   OSM_G, _______, _______,                           _______, FORMCOD,   VC_GF, VC_PREV, VC_NEXT, _______, _______,
+      _______,   OSM_S,   OSM_L,   OSM_A,   OSM_G, C(KC_W), C(KC_T),                           _______, FORMCOD,   VC_GF, VC_PREV, VC_NEXT, _______, _______,
       _______, _______, _______, _______, C(KC_C), C(KC_V), _______, _______,         _______, _______, CLANGED, VC_DECR, _______, _______, _______, _______,
       _______, _______, _______ ,_______ ,     _______ ,    _______, _______,         _______, _______,     _______,      _______, _______, _______, _______
   ),
