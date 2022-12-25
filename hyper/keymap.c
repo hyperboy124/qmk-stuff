@@ -42,26 +42,35 @@ enum {
 };
 enum combo_events {
 termvicombo,
+termvicombo2,
+numcombo,
 mousecombo,
 youcombo,
-numcombo
+resetcombo,
+qucombo
 };
 #include "hyperboy124.h"
 const uint16_t PROGMEM wcombo1[]               = {KC_R, KC_S, KC_T, KC_H, COMBO_END};
+const uint16_t PROGMEM vcombo1[]               = {KC_H, KC_J, KC_K, KC_L, COMBO_END};
 const uint16_t PROGMEM numcombo9[]               = {KC_8, KC_1,COMBO_END};
 const uint16_t PROGMEM numcombo7[]               = {KC_4, KC_1, KC_2,COMBO_END};
-const uint16_t PROGMEM numcombo10[]               = {KC_4, KC_8, KC_2, KC_0,COMBO_END};
+const uint16_t PROGMEM numcombo10[]               = {KC_8, KC_2, KC_4, KC_0,COMBO_END};
 const uint16_t PROGMEM numcombo5[]               = {KC_4, KC_1,COMBO_END};
 const uint16_t PROGMEM numcombo6[]               = {KC_4, KC_2,COMBO_END};
 const uint16_t PROGMEM numcombo3[]               = {KC_1, KC_2,COMBO_END};
 const uint16_t PROGMEM qcombo1[]               = {KC_N, KC_E, KC_A, KC_I, COMBO_END};
+const uint16_t PROGMEM resetcombo1[]               = {KC_R, KC_S, KC_T, KC_H, KC_N, KC_E, KC_A, KC_I, COMBO_END};
+const uint16_t PROGMEM qcombo2[]               = {KC_N, KC_E,COMBO_END};
 const uint16_t PROGMEM ycombo1[]               = {KC_A, KC_E, COMBO_END};
 const uint16_t PROGMEM ycombo2[]               = {KC_A, KC_I, COMBO_END};
 combo_t                key_combos[COMBO_COUNT] = {
     [termvicombo] = COMBO_ACTION(wcombo1),
+    [termvicombo2] = COMBO_ACTION(vcombo1),
     [mousecombo] = COMBO_ACTION(qcombo1),
     [numcombo] = COMBO_ACTION(numcombo10),
     [youcombo] = COMBO_ACTION(ycombo2),
+    [resetcombo] = COMBO_ACTION(resetcombo1),
+    [qucombo] = COMBO_ACTION(qcombo2),
     COMBO(ycombo1, KC_ENT),
     COMBO(numcombo9, KC_9),
     COMBO(numcombo7, KC_7),
@@ -80,6 +89,13 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 TermVIState = true;
             }
             break;
+        case termvicombo2:
+            if (pressed) {
+                layer_off(_TERMVI);
+                layer_off(_QWERTY);
+                TermVIState = false;
+            }
+            break;
         case mousecombo:
             if (pressed) {
                 layer_on(_SYMB);
@@ -93,6 +109,16 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
         case youcombo:
             if (pressed) {
                 SEND_STRING("you");
+            }
+            break;
+        case qucombo:
+            if (pressed) {
+                SEND_STRING("qu");
+            }
+            break;
+        case resetcombo:
+            if (pressed) {
+                soft_reset_keyboard();
             }
             break;
     }
@@ -208,8 +234,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ONESHOTS] = LAYOUT_redox_wrapper(
       _______, _______, _______, _______, _______, _______,                                             _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______, _______,                           _______, CLANGER, VC_INCR, _______, _______, _______, _______,
-      _______,   OSM_S,   OSM_L,   OSM_A,   OSM_G, C(KC_W), C(KC_T),                           _______, FORMCOD,   VC_GF, VC_PREV, VC_NEXT, _______, _______,
+      _______, _______, _______, _______, _______, _______, _______,                           _______, CLANGER, VC_INCR,    KC_F, _______, _______, _______,
+      _______,   OSM_S,   OSM_L,   OSM_A,   OSM_G, C(KC_W), C(KC_T),                           _______, FORMCOD,   VC_GF, VC_PREV, VC_NEXT,   VC_SC, _______,
       _______, _______, _______, _______, C(KC_C), C(KC_V), _______, _______,         _______, _______, CLANGED, VC_DECR, _______, _______, _______, _______,
       _______, _______, _______ ,_______ ,     _______ ,    _______, _______,         _______, _______,     _______,      _______, _______, _______, _______
   ),

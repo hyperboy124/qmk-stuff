@@ -73,6 +73,8 @@ enum custom_keycodes {
     CLANGED,
     IEDITOG,
     VC_GF,
+    VC_SC,
+    VC_FTT,
     VC_NEXT,
     VC_PREV,
     VC_BUFF,
@@ -222,6 +224,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case VC_NEXT:
             if (record->event.pressed) {
                 SEND_STRING("]]");
+            }
+            return true;
+        case VC_SC:
+            if (record->event.pressed) {
+                SEND_STRING("\e sc");
+            }
+            return true;
+        case VC_FTT:
+            if (record->event.pressed) {
+                SEND_STRING("f");
+                SEND_STRING("tt");
             }
             return true;
         case VC_GF:
