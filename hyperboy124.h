@@ -105,7 +105,7 @@ void CheckArrayStack(void) {
 
 void CheckArrayStackI(void) {
     uint8_t CodeConfirmCounter = 0;
-    bool ConfirmedCode2 = false;
+    bool    ConfirmedCode2     = false;
     for (uint8_t vimnumber = 0; vimnumber < 6; vimnumber++) {
         if (VimAutoArray[vimnumber] == VimIArray[vimnumber]) {
             ConfirmedCode2 = ++CodeConfirmCounter == 2;
@@ -233,8 +233,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
         case VC_FTT:
             if (record->event.pressed) {
-                SEND_STRING("f");
-                SEND_STRING("tt");
+                send_string_with_delay("ftt", 110);
+                // SEND_STRING("tt");
             }
             return true;
         case VC_GF:

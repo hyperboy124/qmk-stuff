@@ -46,20 +46,23 @@ termvicombo2,
 numcombo,
 mousecombo,
 youcombo,
-resetcombo,
-qucombo
+qucombo,
+discombo
 };
 #include "hyperboy124.h"
 const uint16_t PROGMEM wcombo1[]               = {KC_R, KC_S, KC_T, KC_H, COMBO_END};
-const uint16_t PROGMEM vcombo1[]               = {KC_H, KC_J, KC_K, KC_L, COMBO_END};
+// const uint16_t PROGMEM vcombo1[]               = {KC_H, KC_J, KC_K, KC_L, COMBO_END};
+const uint16_t PROGMEM vcombo1[]               = {KC_J, KC_K, KC_L, COMBO_END};
 const uint16_t PROGMEM numcombo9[]               = {KC_8, KC_1,COMBO_END};
 const uint16_t PROGMEM numcombo7[]               = {KC_4, KC_1, KC_2,COMBO_END};
-const uint16_t PROGMEM numcombo10[]               = {KC_8, KC_2, KC_4, KC_0,COMBO_END};
+// const uint16_t PROGMEM numcombo10[]               = {KC_8, KC_4, KC_2, KC_0,COMBO_END};
+const uint16_t PROGMEM numcombo10[]               = {KC_8, KC_4, KC_2,COMBO_END};
 const uint16_t PROGMEM numcombo5[]               = {KC_4, KC_1,COMBO_END};
 const uint16_t PROGMEM numcombo6[]               = {KC_4, KC_2,COMBO_END};
 const uint16_t PROGMEM numcombo3[]               = {KC_1, KC_2,COMBO_END};
-const uint16_t PROGMEM qcombo1[]               = {KC_N, KC_E, KC_A, KC_I, COMBO_END};
-const uint16_t PROGMEM resetcombo1[]               = {KC_R, KC_S, KC_T, KC_H, KC_N, KC_E, KC_A, KC_I, COMBO_END};
+// const uint16_t PROGMEM qcombo1[]               = {KC_N, KC_E, KC_A, KC_I, COMBO_END};
+const uint16_t PROGMEM qcombo1[]               = {KC_N, KC_E, KC_A, COMBO_END};
+const uint16_t PROGMEM discombo1[]               = {KC_DOT, KC_SCLN, COMBO_END};
 const uint16_t PROGMEM qcombo2[]               = {KC_N, KC_E,COMBO_END};
 const uint16_t PROGMEM ycombo1[]               = {KC_A, KC_E, COMBO_END};
 const uint16_t PROGMEM ycombo2[]               = {KC_A, KC_I, COMBO_END};
@@ -69,8 +72,8 @@ combo_t                key_combos[COMBO_COUNT] = {
     [mousecombo] = COMBO_ACTION(qcombo1),
     [numcombo] = COMBO_ACTION(numcombo10),
     [youcombo] = COMBO_ACTION(ycombo2),
-    [resetcombo] = COMBO_ACTION(resetcombo1),
     [qucombo] = COMBO_ACTION(qcombo2),
+    [discombo] = COMBO_ACTION(discombo1),
     COMBO(ycombo1, KC_ENT),
     COMBO(numcombo9, KC_9),
     COMBO(numcombo7, KC_7),
@@ -116,9 +119,11 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 SEND_STRING("qu");
             }
             break;
-        case resetcombo:
+        case discombo:
             if (pressed) {
-                soft_reset_keyboard();
+                register_code16(KC_LCTL);
+                tap_code(KC_K);
+                unregister_code16(KC_LCTL);
             }
             break;
     }
@@ -192,17 +197,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_NAV] = LAYOUT_redox_wrapper(
       _______, _______, _______, _______, _______, _______,                                             _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______, _______,                           _______, _______, ________________MOUSE_WHEEL________________,
-      _______, _______, _______, _______, _______, _______, _______,                           _______, _______, _________________MOUSE_MOVE________________,
-      _______, _______, _______, _______, _______, _______, _______, _______,         KC_BTN2, _______, _______, _________________VIM_NAV___________________,
+      _______, _______, _______, _______, _______, _______, _______,                           _______, KC_BTN2, ________________MOUSE_WHEEL________________,
+      _______, _______, _______, _______, _______, _______, _______,                           _______, KC_BTN1, _________________MOUSE_MOVE________________,
+      _______, _______, _______, _______, _______, _______, _______, _______,         KC_BTN2, _______, KC_BTN3, _________________VIM_NAV___________________,
       _______, _______, _______, _______,      _______,     _______, _______,         KC_BTN1, _______,       SYM_L,      _______, _______, _______, _______
     ),
     [_SYMB] = LAYOUT_redox_wrapper(
      OSM_CAG , ___________________BLANK___________________,                                             OSM_SG , _______, _______, _______, _______, _______,
      KC_VOLU , ___________________BLANK___________________, _______,                          _______ , KC_PSLS, KC_PAST, _______, _______, KC_PMNS, _______,
-     KC_VOLD , _______, _______, _______, _______, _______,  KC_GES,                          C(KC_K) , _______,    KC_0,    KC_2,    KC_4,    KC_8, _______,
+     KC_VOLD , _______, _______, _______, _______, _______,  KC_GES,                          C(KC_K) , _______,    KC_8,    KC_4,    KC_2,    KC_0, _______,
      OSM_AG  , _______, _______, _______,  KC_EQL, _______, _______, _______,         _______, _______, KC_PSCR, _______, _______, _______, _______, _______,
-     OSM_G   , _______, _______, _______,      _______,     _______, _______,         _______,   KC_1,     _______,      _______, _______, _______, _______
+     OSM_G   , _______, _______, _______,      _______,     _______, _______,         _______,   KC_1,       KC_SPC,      _______, _______, _______, _______
     ),
     [_ADJUST] = LAYOUT_redox_wrapper(
      _______, _______, _______, _______, _______, _______,                                              _______, _______, _______, _______, _______, _______,
@@ -234,7 +239,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
     [_ONESHOTS] = LAYOUT_redox_wrapper(
       _______, _______, _______, _______, _______, _______,                                             _______, _______, _______, _______, _______, _______,
-      _______, _______, _______, _______, _______, _______, _______,                           _______, CLANGER, VC_INCR,    KC_F, _______, _______, _______,
+      _______, _______, _______, _______, _______, _______, _______,                           _______, CLANGER, VC_INCR,  VC_FTT, _______, _______, _______,
       _______,   OSM_S,   OSM_L,   OSM_A,   OSM_G, C(KC_W), C(KC_T),                           _______, FORMCOD,   VC_GF, VC_PREV, VC_NEXT,   VC_SC, _______,
       _______, _______, _______, _______, C(KC_C), C(KC_V), _______, _______,         _______, _______, CLANGED, VC_DECR, _______, _______, _______, _______,
       _______, _______, _______ ,_______ ,     _______ ,    _______, _______,         _______, _______,     _______,      _______, _______, _______, _______
